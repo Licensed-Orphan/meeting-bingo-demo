@@ -21,3 +21,4 @@ Thumbs.db
 
 # Varlock generated types
 env.d.ts
+.vercel
