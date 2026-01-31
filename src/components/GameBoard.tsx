@@ -364,20 +364,22 @@ export function GameBoard({ game, setGame, onWin }: GameBoardProps) {
               </div>
             )}
 
-            {/* Status Indicator */}
-            <div className="flex items-center gap-2">
-              <div
-                className={cn(
-                  'w-2.5 h-2.5 rounded-full',
-                  game.isListening
-                    ? 'bg-green-500 animate-pulse'
-                    : 'bg-gray-300'
-                )}
-              />
-              <span className="text-sm text-gray-600">
-                {game.isListening ? 'Active' : 'Paused'}
-              </span>
-            </div>
+            {/* Status Indicator - hidden for manual-only categories */}
+            {game.category !== 'jessingo' && (
+              <div className="flex items-center gap-2">
+                <div
+                  className={cn(
+                    'w-2.5 h-2.5 rounded-full',
+                    game.isListening
+                      ? 'bg-green-500 animate-pulse'
+                      : 'bg-gray-300'
+                  )}
+                />
+                <span className="text-sm text-gray-600">
+                  {game.isListening ? 'Active' : 'Paused'}
+                </span>
+              </div>
+            )}
 
             {/* Progress Counter */}
             <div className="text-sm font-medium text-gray-700">
@@ -432,18 +434,22 @@ export function GameBoard({ game, setGame, onWin }: GameBoardProps) {
                 onSquareClick={handleSquareClick}
               />
 
-              <TranscriptPanel
-                transcript={transcript}
-                interimTranscript={interimTranscript}
-                detectedWords={detectedWords}
-                isListening={game.isListening}
-              />
+              {/* Hide transcript panel for manual-only categories like JessIngo */}
+              {game.category !== 'jessingo' && (
+                <TranscriptPanel
+                  transcript={transcript}
+                  interimTranscript={interimTranscript}
+                  detectedWords={detectedWords}
+                  isListening={game.isListening}
+                />
+              )}
 
               <GameControls
                 isListening={game.isListening}
                 onToggleListening={handleToggleListening}
                 onNewCard={handleNewCard}
                 hideNewCard={category ? category.words.length <= 24 : false}
+                hideListening={game.category === 'jessingo'}
               />
             </>
           )}

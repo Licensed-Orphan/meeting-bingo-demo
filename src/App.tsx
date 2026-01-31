@@ -67,6 +67,7 @@ function App() {
       category: categoryId,
       card,
       filledCount: 1, // Free space is already filled
+      startedAt: Date.now(), // Start timer when game begins
     });
     setScreen('game');
   }, []);
@@ -92,6 +93,7 @@ function App() {
         category: game.category,
         card,
         filledCount: 1,
+        startedAt: Date.now(), // Start timer when game begins
       });
       setScreen('game');
     } else {
