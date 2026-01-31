@@ -443,6 +443,7 @@ export function GameBoard({ game, setGame, onWin }: GameBoardProps) {
                 isListening={game.isListening}
                 onToggleListening={handleToggleListening}
                 onNewCard={handleNewCard}
+                hideNewCard={category ? category.words.length <= 24 : false}
               />
             </>
           )}

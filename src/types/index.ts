@@ -1,5 +1,5 @@
 // Category identifier type
-export type CategoryId = 'agile' | 'corporate' | 'tech';
+export type CategoryId = 'agile' | 'corporate' | 'tech' | 'jessingo';
 
 // Category definition
 export interface Category {

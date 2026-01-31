@@ -12,6 +12,7 @@ const categoryIcons: Record<CategoryId, string> = {
   agile: '🏃',
   corporate: '💼',
   tech: '💻',
+  jessingo: '😎',
 };
 
 const categoryColors: Record<CategoryId, { bg: string; border: string; hover: string }> = {
@@ -30,10 +31,15 @@ const categoryColors: Record<CategoryId, { bg: string; border: string; hover: st
     border: 'border-blue-200',
     hover: 'hover:border-blue-400 hover:bg-blue-100',
   },
+  jessingo: {
+    bg: 'bg-amber-50',
+    border: 'border-amber-200',
+    hover: 'hover:border-amber-400 hover:bg-amber-100',
+  },
 };
 
 export function CategorySelect({ onSelect, onBack }: CategorySelectProps) {
-  const categoryIds: CategoryId[] = ['agile', 'corporate', 'tech'];
+  const categoryIds: CategoryId[] = ['agile', 'corporate', 'tech', 'jessingo'];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex flex-col">
