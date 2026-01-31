@@ -24,15 +24,50 @@ export function escapeRegex(string: string): string {
 /**
  * Common variations/synonyms mapping for buzzwords
  * Maps the canonical word to its possible spoken variations
+ * Handles compound words that may be transcribed with spaces
  */
 export const WORD_ALIASES: Record<string, string[]> = {
-  'ci/cd': ['ci cd', 'cicd', 'continuous integration', 'continuous delivery'],
+  // Acronyms and abbreviations
+  'ci/cd': ['ci cd', 'cicd', 'continuous integration continuous delivery', 'ci-cd'],
   'mvp': ['minimum viable product', 'm.v.p.', 'm v p'],
   'roi': ['return on investment', 'r.o.i.', 'r o i'],
   'api': ['a.p.i.', 'a p i', 'application programming interface'],
   'devops': ['dev ops', 'dev-ops', 'development operations'],
   'sla': ['s.l.a.', 's l a', 'service level agreement'],
-  'a/b test': ['a b test', 'ab test', 'split test'],
+  'a/b test': ['a b test', 'ab test', 'split test', 'a-b test'],
+
+  // Agile compound words
+  'standup': ['stand up', 'stand-up'],
+  'burndown': ['burn down', 'burn-down'],
+  'timeboxed': ['time boxed', 'time-boxed'],
+  'self-organizing': ['self organizing', 'selforganizing'],
+  'cross-functional': ['cross functional', 'crossfunctional'],
+  'swimlane': ['swim lane', 'swim-lane'],
+
+  // Corporate compound words
+  'win-win': ['win win', 'winwin'],
+  'net-net': ['net net', 'netnet'],
+  'double-click': ['double click', 'doubleclick'],
+  'low-hanging fruit': ['low hanging fruit'],
+  'top of mind': ['top-of-mind'],
+  'best practice': ['best practices'],
+  'game changer': ['game-changer', 'gamechanger'],
+  'thought leader': ['thought-leader', 'thoughtleader'],
+  'bleeding edge': ['bleeding-edge', 'bleedingedge'],
+
+  // Tech compound words
+  'microservices': ['micro services', 'micro-services'],
+  'serverless': ['server less', 'server-less'],
+  'postmortem': ['post mortem', 'post-mortem'],
+  'rollback': ['roll back', 'roll-back'],
+  'codebase': ['code base', 'code-base'],
+  'runtime': ['run time', 'run-time'],
+  'uptime': ['up time', 'up-time'],
+  'downtime': ['down time', 'down-time'],
+  'load balancing': ['load-balancing', 'loadbalancing'],
+  'feature flag': ['feature-flag', 'featureflag'],
+  'pull request': ['pull-request', 'pullrequest', 'pr'],
+  'code review': ['code-review', 'codereview'],
 };
 
 /**
