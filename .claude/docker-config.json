@@ -1,0 +1,7 @@
+{
+  "containerName": "meeting-bingo-dev",
+  "baseImage": "node:20-alpine",
+  "port": 5173,
+  "hasNativeModules": false,
+  "notes": "React + Vite project, no native modules, using Alpine for smaller image"
+}

@@ -7,6 +7,7 @@ import GameControls from './GameControls';
 import { ToastContainer, useToast } from './ui/Toast';
 import { cn } from '../lib/utils';
 import { getClosestToWin, getAllNearWins, NearWinInfo } from '../lib/bingoChecker';
+import { detectWordsWithAliases } from '../lib/wordDetector';
 
 interface GameBoardProps {
   game: GameState;
@@ -71,11 +72,6 @@ function checkForWin(squares: BingoSquareType[][]): WinningLine | null {
   }
 
   return null;
-}
-
-// Normalize text for matching
-function normalizeText(text: string): string {
-  return text.toLowerCase().replace(/[^a-z0-9\s]/g, '');
 }
 
 export function GameBoard({ game, setGame, onWin }: GameBoardProps) {
@@ -163,26 +159,43 @@ export function GameBoard({ game, setGame, onWin }: GameBoardProps) {
     };
   }, []);
 
-  // Check transcript for matching words
+  // Check transcript for matching words using alias-aware detection
   const checkForMatches = useCallback(
     (text: string) => {
       if (!game.card || game.status !== 'playing') return;
 
-      const normalizedText = normalizeText(text);
-      let hasMatch = false;
-      let matchedWord: string | null = null;
+      // Get all unfilled card words
+      const cardWords: string[] = [];
+      const filledWords = new Set<string>();
+
+      game.card.squares.forEach((row) => {
+        row.forEach((square) => {
+          if (!square.isFreeSpace) {
+            cardWords.push(square.word);
+            if (square.isFilled) {
+              filledWords.add(square.word.toLowerCase());
+            }
+          }
+        });
+      });
+
+      // Use alias-aware detection from wordDetector
+      const detectedMatches = detectWordsWithAliases(text, cardWords, filledWords);
+
+      if (detectedMatches.length === 0) return;
 
       setGame((prev) => {
         if (!prev.card) return prev;
+
+        let lastMatchedWord: string | null = null;
+        const matchedWordsLower = new Set(detectedMatches.map(w => w.toLowerCase()));
 
         const newSquares = prev.card.squares.map((row) =>
           row.map((square) => {
             if (square.isFilled || square.isFreeSpace) return square;
 
-            const normalizedWord = normalizeText(square.word);
-            if (normalizedText.includes(normalizedWord)) {
-              hasMatch = true;
-              matchedWord = square.word;
+            if (matchedWordsLower.has(square.word.toLowerCase())) {
+              lastMatchedWord = square.word;
               return {
                 ...square,
                 isFilled: true,
@@ -194,13 +207,11 @@ export function GameBoard({ game, setGame, onWin }: GameBoardProps) {
           })
         );
 
-        if (!hasMatch) return prev;
-
-        // Update detected words list and show toast
-        if (matchedWord) {
-          setDetectedWords((words) => [...words.slice(-9), matchedWord!]);
-          addToast(`Detected: ${matchedWord}`, 'success', 2000);
-        }
+        // Update detected words list and show toasts for each match
+        detectedMatches.forEach((word) => {
+          setDetectedWords((words) => [...words.slice(-9), word]);
+          addToast(`Detected: ${word}`, 'success', 2000);
+        });
 
         const filledCount = newSquares.flat().filter((sq) => sq.isFilled).length;
         const winningLine = checkForWin(newSquares);
@@ -212,7 +223,7 @@ export function GameBoard({ game, setGame, onWin }: GameBoardProps) {
             card: { ...prev.card, squares: newSquares },
             filledCount,
             winningLine,
-            winningWord: matchedWord,
+            winningWord: lastMatchedWord,
             completedAt: Date.now(),
             status: 'won',
           };
